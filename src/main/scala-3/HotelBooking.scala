@@ -46,4 +46,7 @@ object HotelAnalysis:
         .maxBy(_._2)
     println(s"Country with highest number of bookings is ${countryMostBookings._1} (${countryMostBookings._2})")
 
+    // question 2.1
+    val cheapestHotel = bookings.minBy(_.bookingPrice)
+
 
