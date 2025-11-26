@@ -50,6 +50,13 @@ object HotelAnalysis:
     val cheapestHotel = bookings.minBy(_.bookingPrice)
     println(s"Hotel with lowest booking price is ${cheapestHotel.hotelName} (${cheapestHotel.bookingPrice})")
 
+    //cheapest price after discount
+    val discountPrice =
+      bookings.minBy(b=> b.bookingPrice * (1-b.discount / 100))
+
+    val actualPrice = discountPrice.bookingPrice * (1 - discountPrice.discount /100)
+    println(f"Hotel with lowest actual price after discount is ${discountPrice.hotelName} ($actualPrice%.2f)")
+
     // question 2.2
     val highestDiscountHotel = bookings.maxBy(_.discount)
     println(s"Hotel with highest discount is ${highestDiscountHotel.hotelName} (${highestDiscountHotel.discount}%)")
@@ -68,7 +75,7 @@ object HotelAnalysis:
         }
         .maxBy(_._2)
 
-    println(s"Most profitable hotel: ${mostProfitableHotel._1})")
+    println(s"Most profitable hotel: ${mostProfitableHotel._1} (Score: ${mostProfitableHotel._2}%.2f)")
 
 
 
