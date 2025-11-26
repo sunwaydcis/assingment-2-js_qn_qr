@@ -48,5 +48,27 @@ object HotelAnalysis:
 
     // question 2.1
     val cheapestHotel = bookings.minBy(_.bookingPrice)
+    println(s"Hotel with lowest booking price is ${cheapestHotel.hotelName} (${cheapestHotel.bookingPrice})")
+
+    // question 2.2
+    val highestDiscountHotel = bookings.maxBy(_.discount)
+    println(s"Hotel with highest discount is ${highestDiscountHotel.hotelName} (${highestDiscountHotel.discount}%)")
+
+    //question 2.3
+    val bestProfitHotel = bookings.maxBy(_.profitMargin)
+    println(s"Hotel with best profit margin is ${bestProfitHotel.hotelName} (${bestProfitHotel.profitMargin})")
+
+    //question3
+    val mostProfitableHotel =
+      bookings
+        .groupBy(_.hotelName)
+        .map { case (hotel, list) =>
+          val totalProfitScore = list.map(b => b.noOfPeople * b.profitMargin).sum
+          (hotel, totalProfitScore)
+        }
+        .maxBy(_._2)
+
+    println(s"Most profitable hotel: ${mostProfitableHotel._1})")
+
 
 
