@@ -8,8 +8,25 @@ case class HotelBooking(
                        bookingPrice: Double, discount: Double, profitMargin: Double
                        )
 
-object HotelAnalysis:
-  def main(args: Array[String]): Unit =
+object HotelBooking:
+  def fromCsv(cols: Array[String]): HotelBooking=
+    val originCountry = cols(6)
+    val noOfPeople = cols(11).toInt
+    val hotelName = cols(16)
+    val bookingPrice = cols(20).toDouble
+    val discount = cols(21).replace("%", "").toDouble
+    val profitMargin = cols(23).toDouble
+
+    HotelBooking(
+      originCountry = originCountry,
+      noOfPeople = noOfPeople,
+      hotelName = hotelName,
+      bookingPrice = bookingPrice,
+      discount = discount,
+      profitMargin = profitMargin
+    )
+    
+  /*def main(args: Array[String]): Unit =
 
     val source = Source.fromResource("Hotel_Dataset.csv")
     val lines = source.getLines().drop(1)
@@ -75,7 +92,7 @@ object HotelAnalysis:
         }
         .maxBy(_._2)
 
-    println(s"Most profitable hotel: ${mostProfitableHotel._1} (Score: ${mostProfitableHotel._2}%.2f)")
+    println(s"Most profitable hotel: ${mostProfitableHotel._1} (Score: ${mostProfitableHotel._2}%.2f)")*/
 
 
 
