@@ -3,7 +3,7 @@ import scala.util.{Try, Using}
 
 case class HotelBooking(
 
-                       originCountry: String,
+                       originCountry: String, DestinationCountry: String,
                        noOfPeople: Int, hotelName: String,
                        bookingPrice: Double, discount: Double, profitMargin: Double
                        )
@@ -11,6 +11,7 @@ case class HotelBooking(
 object HotelBooking:
   def fromCsv(cols: Array[String]): HotelBooking=
     val originCountry = cols(6)
+    val DestinationCountry = cols(9)
     val noOfPeople = cols(11).toInt
     val hotelName = cols(16)
     val bookingPrice = cols(20).toDouble
@@ -19,6 +20,7 @@ object HotelBooking:
 
     HotelBooking(
       originCountry = originCountry,
+      DestinationCountry = DestinationCountry,
       noOfPeople = noOfPeople,
       hotelName = hotelName,
       bookingPrice = bookingPrice,
