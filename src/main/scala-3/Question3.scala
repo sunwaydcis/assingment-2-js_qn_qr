@@ -1,6 +1,9 @@
 
 class Question3 extends Analysis:
   override def run(bookings: List[HotelBooking]): Unit =
+    
+    //highest profit is calculate based on no of people or no of day or both 
+    
     val HotelProfit =
       bookings
         .groupBy(_.hotelName)

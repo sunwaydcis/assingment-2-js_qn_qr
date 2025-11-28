@@ -1,6 +1,9 @@
 
 class Question1 extends Analysis:
   override def run(bookings: List[HotelBooking]): Unit =
+    
+    //not confirmed is from origin country or the destination country
+    
     val result =
       bookings
         .groupBy(_.originCountry)
