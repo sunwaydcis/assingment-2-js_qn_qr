@@ -4,14 +4,15 @@ class Question3 extends Analysis:
     
     //highest profit is calculate based on no of people or no of day or both 
     
-    val HotelProfit =
-      bookings
-        .groupBy(_.hotelName)
-        .map { case (hotel, list) =>
-          val totalProfit = list.map(b => b.profitMargin * b.noOfPeople).sum
-          (hotel, totalProfit)
-        }
+    // based on days and rooms
+    val hotelProfit =
+    bookings
+      .groupBy(_.hotelName)
+      .map { case (hotel, list) =>
+        val totalProfit = list.map(b => b.bookingPrice * b.rooms * b.noOfDays * b.profitMargin).sum
+        (hotel, totalProfit)
+      }
 
-    val highestProfit = HotelProfit.maxBy(_._2)
+    val highest = hotelProfit.maxBy(_._2)
 
-    println(s"Most profitable hotel: ${highestProfit._1} (${highestProfit._2}%.2f)")
+    println(s"Most profitable hotel: ${highest._1} (${highest._2})")

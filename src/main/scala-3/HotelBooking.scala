@@ -4,8 +4,8 @@ import scala.util.{Try, Using}
 case class HotelBooking(
 
                        originCountry: String, DestinationCountry: String,
-                       noOfPeople: Int, hotelName: String,
-                       bookingPrice: Double, discount: Double, profitMargin: Double
+                       noOfPeople: Int, noOfDays: Int, hotelName: String,
+                       rooms: Int,bookingPrice: Double, discount: Double, profitMargin: Double
                        )
 
 object HotelBooking:
@@ -13,6 +13,8 @@ object HotelBooking:
     val originCountry = cols(6)
     val DestinationCountry = cols(9)
     val noOfPeople = cols(11).toInt
+    val noOfDays = cols(13).toInt
+    val rooms = cols(15).toInt
     val hotelName = cols(16)
     val bookingPrice = cols(20).toDouble
     val discount = cols(21).replace("%", "").toDouble
@@ -22,6 +24,8 @@ object HotelBooking:
       originCountry = originCountry,
       DestinationCountry = DestinationCountry,
       noOfPeople = noOfPeople,
+      noOfDays = noOfDays,
+      rooms = rooms,
       hotelName = hotelName,
       bookingPrice = bookingPrice,
       discount = discount,
