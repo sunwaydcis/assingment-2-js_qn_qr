@@ -13,9 +13,7 @@ class Question2 extends Analysis:
     //2.3
     // more than one lowest profit margin hotel, should load all out
     val lowerProfitHotel = bookings.minBy(_.profitMargin)
-<<<<<<< HEAD
-    println(s"Hotel with lowest profit margin is ${lowerProfitHotel.hotelName} (${lowerProfitHotel.profitMargin}%)")
-=======
+
     println(s"Hotel with lowest profit margin is ${lowerProfitHotel.hotelName} (${lowerProfitHotel.profitMargin})")
 
     // cheapest price after discount
@@ -23,4 +21,4 @@ class Question2 extends Analysis:
 
     val actualPrice = discountPrice.bookingPrice * (1 - discountPrice.discount / 100)
     println(f"Hotel with lowest actual price after discount is ${discountPrice.hotelName} ($actualPrice%.2f)")
->>>>>>> cccf11f58d9224a52a081b98b659edcb1c4c90b7
+
