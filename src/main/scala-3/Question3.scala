@@ -14,4 +14,4 @@ class Question3 extends Analysis:
 
     val highestProfit = HotelProfit.maxBy(_._2)
 
-    println(s"Most profitable hotel: ${highestProfit._1} (${highestProfit._2}%.2f)")
+    println(f"Most profitable hotel: ${highestProfit._1} (${highestProfit._2}%.2f)")
