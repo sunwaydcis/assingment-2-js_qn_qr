@@ -14,7 +14,7 @@ class Question2 extends Analysis:
 
     //2.2
     val highestDiscountHotel = bookings.maxBy(_.discount)
-    println(s"Hotel with highest discount is ${highestDiscountHotel.hotelName} (${highestDiscountHotel.discount}%)")
+    println(s"Hotel with highest discount is ${highestDiscountHotel.hotelName} (${highestDiscountHotel.discount})")
 
     //2.3
     // more than one lowest profit margin hotel, should load all out
