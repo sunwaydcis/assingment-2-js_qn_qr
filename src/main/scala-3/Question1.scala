@@ -12,7 +12,7 @@ class Question1 extends Analysis:
         
     val result2 =
       bookings
-        .groupBy(_.DestinationCountry)
+        .groupBy(_.destinationCountry)
         .view.mapValues(_.size)
         .maxBy(_._2)
 
