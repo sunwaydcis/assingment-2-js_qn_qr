@@ -18,23 +18,15 @@ class Question2 extends Analysis:
 
     val prices = hotelMetrics.values.map(_._1)
     val discounts = hotelMetrics.values.map(_._2)
-    val profitMargin = hotelMetrics.values.map(_._3)
+    val profitMargins = hotelMetrics.values.map(_._3)
 
-    val minPrice = prices.min
-    val maxPrice = prices.max
-    val minDiscount = discounts.min
-    val maxDiscount = discounts.max
-    val minProfitMargin = profitMargin.min
-    val maxProfitMargin = profitMargin.max
+    // Find min and max for each metric
+    val (minPrice, maxPrice) = (prices.min, prices.max)
+    val (minDiscount, maxDiscount) = (discounts.min, discounts.max)
+    val (minProfitMargin, maxProfitMargin) = (profitMargins.min, profitMargins.max)
 
-    val economyScores = hotelMetrics.map { each =>
-      val hotel = each._1 // hotelName
-      val metrics = each._2 // tuple of (avgPrice, avgDiscount, avgProfitMargin)
-
-      val price = metrics._1 // avgPrice
-      val discount = metrics._2 // avgDiscount
-      val profit = metrics._3 // avgProfitMargin
-
+    // Normalize and calculate economy score
+    val economyScores = hotelMetrics.map { case (hotel, (price, discount, profit)) =>
       // Normalize to 0-1 range
       val normPrice = 1 - (price - minPrice) / (maxPrice - minPrice) // low val is better so -1
       val normDiscount = (discount - minDiscount) / (maxDiscount - minDiscount) // high val better
