@@ -1,19 +1,25 @@
 
 class Question3 extends Analysis:
   override def run(bookings: List[HotelBooking]): Unit =
-    
-    //highest profit is calculate based on no of people or no of day or both 
 
-    // based on days and rooms
-    val hotelProfit =
-    bookings
-      .groupBy(_.hotelName)
-      .map { case (hotel, list) =>
-        val totalProfit = list.map(b => b.bookingPrice * b.rooms * b.noOfDays * b.profitMargin).sum
-        (hotel, totalProfit)
-      }
+    val statsByHotel =
+      bookings
+        .groupBy(_.hotelName)
+        .map { case (hotel, list) =>
+          val totalProfitValues =
+            list.map { b =>
+              if b.rooms == 0 || b.noOfDays == 0 || b.profitMargin == 0 then
+                0.0
+              else
+                b.bookingPrice / b.rooms / b.noOfDays / b.profitMargin
+            }
 
-    val highest = hotelProfit.maxBy(_._2)
+          val finalProfit = totalProfitValues.sum
+
+          (hotel, finalProfit)
+        }
 
 
-    println(f"Most profitable hotel: ${highest._1} (${highest._2}%.2f)")
+    val best = statsByHotel.maxBy(_._2)
+
+    println(f"Most profitable hotel is ${best._1} (total profit = ${best._2}%.2f)")
