@@ -2,8 +2,9 @@ import scala.io.Source
 import scala.util.Using
 
 object DataUtils:
-  def loadBookings(): List[HotelBooking] =
-    Using.resource(Source.fromResource("Hotel_Dataset.csv")) { source =>
+  // Improve code reusability
+  def loadBookings(dataset: String): List[HotelBooking] =
+    Using.resource(Source.fromResource(dataset)) { source =>
       source 
         .getLines()
         .drop(1)
