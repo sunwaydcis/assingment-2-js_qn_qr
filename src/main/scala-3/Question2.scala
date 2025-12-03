@@ -3,56 +3,72 @@ class Question2 extends Analysis, Normalizer:
   override def run(bookings: List[HotelBooking]): Unit =
 
     println("Question 2: Most Economical Hotel")
-    val statsHotel: Map[String, (Double, Double, Double)] =
+
+    val hotelMetrics: Map[String, (Double, Double, Double, Double, Double, Double, Double, Double, Double)] =
       bookings
         .groupBy(_.hotelName)
         .map { case (hotel, list) =>
-          val avgPrice = list.map(_.bookingPrice).sum / list.size
-          val avgDiscount = list.map(_.discount).sum / list.size
-          val avgProfit = list.map(_.profitMargin).sum / list.size
-          (hotel, (avgPrice, avgDiscount, avgProfit))
+          val priceValues = list.map(b => b.bookingPrice / b.noOfDays / b.rooms)
+          val discountValues = list.map(_.discount)
+          val profitValues = list.map(_.profitMargin)
+
+          val avgPrice = priceValues.sum / list.size
+          val avgDiscount = discountValues.sum / list.size
+          val avgProfit = profitValues.sum / list.size
+
+          val minPrice = priceValues.min
+          val maxPrice = priceValues.max
+
+          val minDiscount = discountValues.min
+          val maxDiscount = discountValues.max
+
+          val minProfit = profitValues.min
+          val maxProfit = profitValues.max
+
+          (hotel, (avgPrice, avgDiscount, avgProfit,minPrice, maxPrice, minDiscount, maxDiscount, minProfit, maxProfit))
         }
 
 
-    val prices = statsHotel.values.map(_._1).toList
-    val discounts = statsHotel.values.map(_._2).toList
-    val profits = statsHotel.values.map(_._3).toList
+    // Extract global min/max for same group of hotels (same hotel name)
+//    val groupedMinPrice = hotelMetrics.values.map(_._4).min
+//    val groupedMaxPrice = hotelMetrics.values.map(_._5).max
+//
+//    val groupedMinDiscount = hotelMetrics.values.map(_._6).min
+//    val groupedMaxDiscount = hotelMetrics.values.map(_._7).max
+//
+//    val groupedMinProfit = hotelMetrics.values.map(_._8).min
+//    val groupedMaxProfit = hotelMetrics.values.map(_._9).max
 
-    val minPrice = prices.min
-    val maxPrice = prices.max
-    val minDiscount = discounts.min
-    val maxDiscount = discounts.max
-    val minProfit = profits.min
-    val maxProfit = profits.max
+//    val prices = hotelMetrics.values.map(_._1)
+//    val discounts = hotelMetrics.values.map(_._2)
+//    val profitMargins = hotelMetrics.values.map(_._3)
 
-    // normalization
-    def normalizeLowBetter(value: Double, minV: Double, maxV: Double): Double =
-      if (maxV == minV) 0.0 else (value - minV) / (maxV - minV) // 0 = best (min)
+    // Find min and max for each metric
+//    val (minPrice, maxPrice) = (prices.min, prices.max)
+//    val (minDiscount, maxDiscount) = (discounts.min, discounts.max)
+//    val (minProfitMargin, maxProfitMargin) = (profitMargins.min, profitMargins.max)
 
+    // Normalize and calculate economy score
+    val economyScores = hotelMetrics.map { case (hotel, (avgPrice, avgDiscount, avgProfit, minPrice, maxPrice, minDiscount, maxDiscount, minProfit, maxProfit)) =>
+      // Normalize to 0-1 range
+      val normPrice = normalizeLowBetter(avgPrice, minPrice, maxPrice) // low val is better so -1
+      val normDiscount = normalizeHighBetter(avgDiscount, minDiscount, maxDiscount) // high val better
+      val normProfit = normalizeLowBetter(avgProfit, minProfit, maxProfit) // low better for cust
 
-    // for discount, higher is better
-    def normalizeHighBetter(value: Double, minV: Double, maxV: Double): Double =
-      if (maxV == minV) 0.0 else 1.0 - ((value - minV) / (maxV - minV)) // 0 = best (max discount)
+      // Calculate economy score, higher score implies a more economical option for cust
+      val economyScore = (normPrice + normDiscount + normProfit) / 3
 
-    //compute composite score
-    val scoreByHotel: Map[String, Double] =
-      statsHotel.map { case (hotel, (avgPrice, avgDiscount, avgProfit)) =>
-        val np = normalizeLowBetter(avgPrice, minPrice, maxPrice)
-        val nd = normalizeHighBetter(avgDiscount, minDiscount, maxDiscount)
-        val npr = normalizeLowBetter(avgProfit, minProfit, maxProfit)
-        val composite = np + nd + npr
-        (hotel, composite)
-      }
+      (hotel, economyScore, avgPrice, avgDiscount, avgProfit)
+    }
 
-    val best = scoreByHotel.minBy(_._2)
-    val bestHotel = best._1
-    val bestScore = best._2
+    // Find the most economical hotel
+    val mostEconomical = economyScores.maxBy(tuple => tuple._2)
+    println(f"Most Economical Hotel: ${mostEconomical._1}")
 
-    val (avgP, avgD, avgPr) = statsHotel(bestHotel)
-    println(f"Best combined hotel: $bestHotel (score: $bestScore%.4f)")
-    println(f"Avg price: ${avgP}%.2f, Avg discount: ${avgD}%.2f%%, Avg profit margin: ${avgPr}%.2f")
-
-
+    println(f"  Economy Score: ${mostEconomical._2}%.4f")
+    println(f"  Avg Booking Price: ${mostEconomical._3}%.2f")
+    println(f"  Avg Discount: ${mostEconomical._4}%.2f%%")
+    println(f"  Avg Profit Margin: ${mostEconomical._5}%.2f")
 
 
 
