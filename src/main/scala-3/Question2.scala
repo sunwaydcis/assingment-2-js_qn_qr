@@ -1,5 +1,4 @@
-
-class Question2 extends Analysis:
+class Question2 extends Analysis, Normalizer:
 
   override def run(bookings: List[HotelBooking]): Unit =
 
@@ -28,9 +27,9 @@ class Question2 extends Analysis:
     // Normalize and calculate economy score
     val economyScores = hotelMetrics.map { case (hotel, (price, discount, profit)) =>
       // Normalize to 0-1 range
-      val normPrice = 1 - (price - minPrice) / (maxPrice - minPrice) // low val is better so -1
-      val normDiscount = (discount - minDiscount) / (maxDiscount - minDiscount) // high val better
-      val normProfit = 1- (profit - minProfitMargin) / (maxProfitMargin - minProfitMargin) // low better for cust
+      val normPrice = normalizeLowBetter(price, minPrice, maxPrice) // low val is better so -1
+      val normDiscount = normalizeHighBetter(discount, minDiscount, maxDiscount) // high val better
+      val normProfit = normalizeLowBetter(profit, minProfitMargin, maxProfitMargin) // low better for cust
 
       // Calculate economy score, higher score implies a more economical option for cust
       val economyScore = normPrice + normDiscount + normProfit
