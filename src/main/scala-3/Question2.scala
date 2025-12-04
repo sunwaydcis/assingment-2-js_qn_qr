@@ -3,14 +3,14 @@ class Question2 extends Analysis, Normalizer:
   override def run(bookings: List[HotelBooking]): Unit =
 
     println("Question 2: Most Economical Hotel")
-    val statsHotel: Map[String, (Double, Double, Double)] =
+    val statsHotel =
       bookings
-        .groupBy(_.hotelName)
-        .map { case (hotel, list) =>
+        .groupBy(b => (b.hotelName, b.destinationCountry, b.destinationCity))
+        .map { case (key, list) =>
           val avgPrice = list.map(_.bookingPrice).sum / list.size
           val avgDiscount = list.map(_.discount).sum / list.size
           val avgProfit = list.map(_.profitMargin).sum / list.size
-          (hotel, (avgPrice, avgDiscount, avgProfit))
+          (key, (avgPrice, avgDiscount, avgProfit))
         }
 
 
@@ -34,22 +34,27 @@ class Question2 extends Analysis, Normalizer:
     def normalizeHighBetter(value: Double, minV: Double, maxV: Double): Double =
       if (maxV == minV) 0.0 else 1.0 - ((value - minV) / (maxV - minV)) // 0 = best (max discount)
 
-    //compute composite score
-    val scoreByHotel: Map[String, Double] =
-      statsHotel.map { case (hotel, (avgPrice, avgDiscount, avgProfit)) =>
+    type HotelKey = (String, String, String) // (hotelName, destinationCountry, destinationCity)
+
+    // compute composite score — note the key type is HotelKey, not String
+    val scoreByHotel: Map[HotelKey, Double] =
+      statsHotel.map { case (hotelKey, (avgPrice, avgDiscount, avgProfit)) =>
         val np = normalizeLowBetter(avgPrice, minPrice, maxPrice)
         val nd = normalizeHighBetter(avgDiscount, minDiscount, maxDiscount)
         val npr = normalizeLowBetter(avgProfit, minProfit, maxProfit)
         val composite = np + nd + npr
-        (hotel, composite)
+        (hotelKey, composite)
       }
 
     val best = scoreByHotel.minBy(_._2)
-    val bestHotel = best._1
+    val bestHotelKey = best._1
     val bestScore = best._2
 
-    val (avgP, avgD, avgPr) = statsHotel(bestHotel)
-    println(f"Best combined hotel: $bestHotel (score: $bestScore%.4f)")
+    // destructure the tuple key for pretty printing
+    val (bestHotelName, bestDestCountry, bestDestCity) = bestHotelKey
+    val (avgP, avgD, avgPr) = statsHotel(bestHotelKey)
+
+    println(f"Most Economical Hotel is  $bestHotelName, Location is  $bestDestCity, $bestDestCountry ")
     println(f"Avg price: ${avgP}%.2f, Avg discount: ${avgD}%.2f%%, Avg profit margin: ${avgPr}%.2f")
 
 

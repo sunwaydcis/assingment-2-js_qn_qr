@@ -4,7 +4,7 @@ import scala.util.{Try, Using}
 case class HotelBooking(
 
                        originCountry: String, destinationCountry: String,
-                       noOfPeople: Int, noOfDays: Int, hotelName: String,
+                       destinationCity: String, noOfPeople: Int, noOfDays: Int, hotelName: String,
                        rooms: Int,bookingPrice: Double, discount: Double, profitMargin: Double
                        )
 
@@ -12,6 +12,7 @@ object HotelBooking:
   def fromCsv(cols: Array[String]): HotelBooking=
     val originCountry = cols(6)
     val destinationCountry = cols(9)
+    val destinationCity = cols(10)
     val noOfPeople = cols(11).toInt
     val noOfDays = cols(13).toInt
     val rooms = cols(15).toInt
@@ -23,6 +24,7 @@ object HotelBooking:
     HotelBooking(
       originCountry = originCountry,
       destinationCountry = destinationCountry,
+      destinationCity = destinationCity,
       noOfPeople = noOfPeople,
       noOfDays = noOfDays,
       rooms = rooms,
