@@ -2,7 +2,7 @@ class Question2 extends Analysis, Normalizer:
 
   override def run(bookings: List[HotelBooking]): Unit =
 
-    println("Question 2: Most Economical Hotel")
+    println("Question 2: Most Economical Hotel:")
     val statsHotel =
       bookings
         .groupBy(b => (b.hotelName, b.destinationCountry, b.destinationCity))
@@ -54,8 +54,8 @@ class Question2 extends Analysis, Normalizer:
     val (bestHotelName, bestDestCountry, bestDestCity) = bestHotelKey
     val (avgP, avgD, avgPr) = statsHotel(bestHotelKey)
 
-    println(f"Most Economical Hotel is  $bestHotelName, Location is  $bestDestCity, $bestDestCountry ")
-    println(f"Avg price: ${avgP}%.2f, Avg discount: ${avgD}%.2f%%, Avg profit margin: ${avgPr}%.2f")
+    println(f" Most Economical Hotel is  $bestHotelName, Location is  $bestDestCity, $bestDestCountry ")
+    println(f" Avg price: ${avgP}%.2f, Avg discount: ${avgD}%.2f%%, Avg profit margin: ${avgPr}%.2f")
 
 
 
