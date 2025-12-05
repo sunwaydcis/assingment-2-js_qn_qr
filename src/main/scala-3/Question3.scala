@@ -1,68 +1,33 @@
-
-class Question3 extends Analysis, Normalizer:
+class Question3 extends Analysis:
   override def run(bookings: List[HotelBooking]): Unit =
+    println("Question 3: Most Profitable Hotel:")
 
-    println("Question 3: Most Profitable Hotel")
-
-    val profitMetrics: Map[String, (Int, Double, Int, Int, Double, Double)] =
+    // Group by unique hotel (name + country + city)
+    val hotelStats =
       bookings
-        .groupBy(_.hotelName)
-        .map { case (hotel, list) =>
-          val paxValues = list.map(_.noOfPeople)
-          val profitValues = list.map(_.profitMargin)
+        .groupBy(b => (b.hotelName, b.destinationCountry, b.destinationCity))
+        .map { case ((hotelName, country, city), hotelBookings) =>
+          // Calculate the two required factors
+          val totalVisitors = hotelBookings.map(_.noOfPeople).sum
+          val avgProfitMargin = hotelBookings.map(_.profitMargin).sum / hotelBookings.size
 
-          val avgPeople = paxValues.sum / list.size
-          val avgProfit = profitValues.sum / list.size
+          // Create a simple composite score (visitors × profit margin)
+          val score = totalVisitors * avgProfitMargin
 
-          val minPeople = paxValues.min
-          val maxPeople = paxValues.max
-
-          val minProfit = profitValues.min
-          val maxProfit = profitValues.max
-
-          (hotel, (avgPeople, avgProfit, minPeople, maxPeople, minProfit, maxProfit))
+          (hotelName, country, city, totalVisitors, avgProfitMargin, score)
         }
 
-
-    // Normalize and calculate economy score
-    val profitabilityScores = profitMetrics.map { case (hotel, (avgPeople, avgProfit, minPeople, maxPeople, minProfit, maxProfit)) =>
-      // Normalize to 0-1 range
-      val normPax = normalizeHighBetter(avgPeople, minPeople, maxPeople) // high val better
-      val normProfit = normalizeHighBetter(avgProfit, minProfit, maxProfit) // high val better
-
-      // Calculate economy score, higher score implies a more economical option for cust
-      val profitabilityScore = (normPax + normProfit) / 2
-
-      (hotel, profitabilityScore, avgPeople, avgProfit)
+    if (hotelStats.isEmpty) {
+      println("No data available")
+      return
     }
 
-    // Find the most economical hotel
-    val mostProfitable = profitabilityScores.maxBy(tuple => tuple._2)
-    println(f"Most Profitable Hotel: ${mostProfitable._1}")
+    // Find the hotel with the highest score
+    val bestHotel = hotelStats.maxBy(_._6)
+    val (hotelName, country, city, visitors, profit, score) = bestHotel
 
-    println(f"  Profitability Score: ${mostProfitable._2}%.4f")
-    println(f"  Avg Booking People: ${mostProfitable._3}%.2f")
-    println(f"  Avg Profit Margin: ${mostProfitable._4}%.2f")
-
-
-//    val statsByHotel =
-//      bookings
-//        .groupBy(_.hotelName)
-//        .map { case (hotel, list) =>
-//          val totalProfitValues =
-//            list.map { b =>
-//              if b.rooms == 0 || b.noOfDays == 0 || b.profitMargin == 0 then
-//                0.0
-//              else
-//                b.bookingPrice / b.rooms / b.noOfDays / b.profitMargin
-//            }
-//
-//          val finalProfit = totalProfitValues.sum
-//
-//          (hotel, finalProfit)
-//        }
-//
-//
-//    val best = statsByHotel.maxBy(_._2)
-//
-//    println(f"Most profitable hotel is ${best._1} (total profit = ${best._2}%.2f)")
+    println(s" Most Profitable Hotel: $hotelName")
+    println(s" Location: $city, $country")
+    println(f" Total Visitors: $visitors")
+    println(f" Average Profit Margin: ${profit * 100}%.1f%%")
+    println(f" Profit Score (visitors × profit margin): $score%.2f")
