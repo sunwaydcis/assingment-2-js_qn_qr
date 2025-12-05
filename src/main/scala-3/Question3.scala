@@ -38,7 +38,7 @@ class Question3 extends Analysis:
         val np = normalizeHighBetter(avgPrice, minPrice, maxPrice)
         val npr = normalizeHighBetter(avgProfit, minProfit, maxProfit)
         val nv = normalizeHighBetter(avgPeople, minPeople, maxPeople)
-        val composite = np + npr + nv
+        val composite =  (npr + nv)
         (key, composite)
       }
 
