@@ -1,53 +1,33 @@
-
 class Question3 extends Analysis:
   override def run(bookings: List[HotelBooking]): Unit =
+    println("Question 3: Most Profitable Hotel:")
 
-    val statsByHotel =
+    // Group by unique hotel (name + country + city)
+    val hotelStats =
       bookings
-        .groupBy( b => (b.hotelName, b.destinationCountry, b.destinationCity))
-        .map{ case (key, list) =>
-          val avgPrice = list.map(_.bookingPrice).sum / list.size
-          val avgProfit = list.map(_.profitMargin).sum / list.size
-          val avgPeople = list.map(_.noOfPeople).sum / list.size
-          (key, (avgPrice, avgProfit, avgPeople))
+        .groupBy(b => (b.hotelName, b.destinationCountry, b.destinationCity))
+        .map { case ((hotelName, country, city), hotelBookings) =>
+          // Calculate the two required factors
+          val totalVisitors = hotelBookings.map(_.noOfPeople).sum
+          val avgProfitMargin = hotelBookings.map(_.profitMargin).sum / hotelBookings.size
+
+          // Create a simple composite score (visitors × profit margin)
+          val score = totalVisitors * avgProfitMargin
+
+          (hotelName, country, city, totalVisitors, avgProfitMargin, score)
         }
 
+    if (hotelStats.isEmpty) {
+      println("No data available")
+      return
+    }
 
-    val prices = statsByHotel.values.map(_._1).toList
-    val profits = statsByHotel.values.map(_._2).toList
-    val peoples = statsByHotel.values.map(_._3).toList
+    // Find the hotel with the highest score
+    val bestHotel = hotelStats.maxBy(_._6)
+    val (hotelName, country, city, visitors, profit, score) = bestHotel
 
-    val minPrice = prices.min
-    val maxPrice = prices.max
-    val minProfit = profits.min
-    val maxProfit = profits.max
-    val minPeople = peoples.min
-    val maxPeople = peoples.max
-
-    def normalizeLowBetter(v: Double, minV: Double, maxV: Double): Double =
-      if (maxV == minV) 0.0 else (v - minV) / (maxV - minV)
-
-    def normalizeHighBetter(v: Double, minV: Double, maxV: Double): Double =
-      if (maxV == minV) 0.0 else 1.0 - ((v - minV) / (maxV - minV))
-
-    // compute
-    type HotelKey = (String, String, String)
-
-    val scoreByHotel: Map[HotelKey, Double] =
-      statsByHotel.map{ case (key, (avgPrice, avgProfit, avgPeople)) =>
-        val np = normalizeHighBetter(avgPrice, minPrice, maxPrice)
-        val npr = normalizeHighBetter(avgProfit, minProfit, maxProfit)
-        val nv = normalizeHighBetter(avgPeople, minPeople, maxPeople)
-        val composite = np + npr + nv
-        (key, composite)
-      }
-
-    val best = scoreByHotel.minBy(_._2)
-    val (hotelName, destCountry, destCity) = best._1
-    val bestScore = best._2
-
-    val (avgP, avgPr, avgPeo) = statsByHotel(best._1)
-
-    println(f"Best profitable hotel: $hotelName, $destCity, $destCountry (score: $bestScore%.4f)")
-    println(f"Avg price: $avgP%.2f, Avg profit margin: $avgPr%.2f, Avg visitors: $avgPeo%.2f")
-
+    println(s" Most Profitable Hotel: $hotelName")
+    println(s" Location: $city, $country")
+    println(f" Total Visitors: $visitors")
+    println(f" Average Profit Margin: ${profit * 100}%.1f%%")
+    println(f" Profit Score (visitors × profit margin): $score%.2f")
