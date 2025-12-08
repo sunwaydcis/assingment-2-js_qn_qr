@@ -1,4 +1,6 @@
-abstract class Question extends Analysis, Normalizer, HotelGrouping, MinMaxCalculator 
+abstract class Question extends Normalizer, HotelGrouping, MinMaxCalculator:
+  // Run a specific analysis using the list of hotel bookings.
+  def run(bookings: List[HotelBooking]): Unit
 
 trait Normalizer:
   def normalizeLowBetter(value: Double, min: Double, max: Double): Double =
