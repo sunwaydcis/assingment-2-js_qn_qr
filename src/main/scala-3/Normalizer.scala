@@ -4,7 +4,7 @@ trait Normalizer:
   def normalizeHighBetter(value: Double, min: Double, max: Double): Double =
     if (max == min) 0.0 else (value - min) / (max - min)
 
-trait Calculator:
+trait HotelGrouping:
   def computeHotelStats[T](bookings: List[HotelBooking])
                           (metricFn: List[HotelBooking] => T): Map[(String, String, String), T] = {
     bookings
@@ -16,6 +16,7 @@ trait Calculator:
     stats.groupBy { case ((hotelName, _, _), _) => hotelName }
   }
 
+trait MinMaxCalculator:
   // Generic min-max calculation for tuples of any size
   def calculateMinMax2[T](
                            groupedData: Map[String, Map[(String, String, String), T]],
