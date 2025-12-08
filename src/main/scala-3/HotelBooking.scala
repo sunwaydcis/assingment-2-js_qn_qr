@@ -1,8 +1,4 @@
-import scala.io.Source
-import scala.util.{Try, Using}
-
 case class HotelBooking(
-
                        originCountry: String, destinationCountry: String,
                        destinationCity: String, noOfPeople: Int, noOfDays: Int, hotelName: String,
                        rooms: Int,bookingPrice: Double, discount: Double, profitMargin: Double
