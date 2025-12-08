@@ -37,4 +37,4 @@ class Question3 extends Question:
       profitScores.maxBy(_._4)
 
     println(f" Most Profitable Hotel is  $hotelName, Located at $city, $country")
-    println(f" Total visitors: $totalVisitors%d, Avg Profit Margin: ${avgProfitMargin}%.2f")
+    println(f" Total visitors: $totalVisitors%d, Avg Profit Margin: ${avgProfitMargin * 100}%.2f%%")

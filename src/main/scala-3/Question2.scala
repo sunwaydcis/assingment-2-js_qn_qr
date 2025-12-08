@@ -42,4 +42,4 @@ class Question2 extends Question:
       economyScores.maxBy(_._4)
 
     println(f" Most Economical Hotel is  $hotelName, Location is  $city, $country ")
-    println(f" Avg price: ${avgPrice}%.2f, Avg discount: ${avgDiscount}%.2f%%, Avg profit margin: ${avgProfit}%.2f")
+    println(f" Avg price: ${avgPrice}%.2f, Avg discount: ${avgDiscount}%.2f%%, Avg profit margin: ${avgProfit * 100}%.2f%%")
