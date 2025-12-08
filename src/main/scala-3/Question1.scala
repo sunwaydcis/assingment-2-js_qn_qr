@@ -1,4 +1,4 @@
-class Question1 extends Analysis:
+class Question1 extends Question:
   override def run(bookings: List[HotelBooking]): Unit =
     
     // Based on destination country

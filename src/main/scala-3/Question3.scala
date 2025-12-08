@@ -1,4 +1,4 @@
-class Question3 extends Analysis, Normalizer, HotelGrouping, MinMaxCalculator:
+class Question3 extends Question:
   override def run(bookings: List[HotelBooking]): Unit =
     println("Question 3: Most Profitable Hotel:")
 

@@ -1,3 +1,5 @@
+abstract class Question extends Analysis, Normalizer, HotelGrouping, MinMaxCalculator 
+
 trait Normalizer:
   def normalizeLowBetter(value: Double, min: Double, max: Double): Double =
     if (max == min) 0.0 else 1 - (value - min) / (max - min)
